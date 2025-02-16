@@ -1,0 +1,52 @@
+.env
+# Binaries
+**/bin
+**/obj
+
+# Dependency Folders
+node_modules/
+wwwroot/lib/
+
+# NuGet related files
+*.nupkg
+packages/
+[Bb]inaries/
+[Pp]ackages/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio and VS Code files
+.vs/
+.vscode/
+*.csproj.user
+*.props
+*.targets
+*.vspscc
+*.vssscc
+*_i.psess
+*_testadapter.log*
+*.userprefs
+*.DotSettings.user
+
+# Build and temp files
+*.exe
+*.dll
+*.pdb
+*.cache
+*.tmp
+*.log
+[Tt]emp/
+_ReSharper*/
+*.orig
+*~
+*.swp
+*.swo
+*.DS_Store
+*.DS_Store?
+.AppleDouble
+.LSOverride
+
+# Deployment files
+**/publish/*
