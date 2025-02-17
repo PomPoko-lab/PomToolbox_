@@ -33,28 +33,34 @@
     </div>
 </div>
 
-@if (matchedPokemonCards.Count > 0 || matchedTrainerCards.Count > 0) {
-    <div class="w-full bg-base-200 mb-auto">
-        <div class="w-full md:w-2xl xl:w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6 justify-items-center">
+@if (matchedPokemonCards.Count > 0) {
+    <div class="w-full bg-base-200 mb-auto grow">
+        <div class="w-full md:w-3xl xl:w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6 justify-items-center">
         @foreach (PokemonCard card in matchedPokemonCards) {
-            <a href="@card.Tcgplayer?.Url.ToString()" target="_blank" class="tooltip">
-                <div class="tooltip-content">
-                    <span>Market Value: @(card?.Tcgplayer?.Prices?.Holofoil?.Market != null ? "$" + card.Tcgplayer.Prices.Holofoil.Market.ToString("0.00") : "N/A")</span>
+            <div class="card bg-base-100 shadow-md border-primary">
+                <figure>
+                    <img class="p-3" src="@card?.Images?.Small?.ToString()"/>
+                </figure>
+                <div class="card-body gap-0 p-5 pt-2">
+                    <h2 class="card-title">@card?.Name?.ToString()</h2>
+                    <p>@card?.Set?.Name?.ToString()</p>
+                    <p>@card?.Rarity?.ToString()</p>
+                    <p class="my-2">
+                        Market: 
+                        <strong>
+                            @(card?.Tcgplayer?.Prices?.Holofoil?.Market != null ? "$" + card.Tcgplayer.Prices.Holofoil.Market.ToString("0.00") : "N/A")
+                        </strong>
+                    </p>
+                    <div class="card-actions mt-4 justify-between items-center">
+                        <a href="@card?.Tcgplayer?.Url.ToString()" target="_blank">
+                            <img class="object-contain max-w-[50px]" src="/assets/logos/tcgplayer-logo.webp" alt="tcgplayer-logo">
+                        </a>
+                        <button class="btn btn-primary btn-outline btn-circle">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="rounded-xl overflow-hidden drop-shadow-md flex hover:scale-105 hover:z-1 hover:drop-shadow-xl transition duration-300 ease-in-out">
-                    <img src="@card?.Images?.Small?.ToString()" alt="">
-                </div>
-            </a>
-        }
-        @foreach (TrainerCard card in matchedTrainerCards) {
-            <a href="@card.Tcgplayer?.Url.ToString()" target="_blank" class="tooltip">
-                <div class="tooltip-content">
-                    <span>Market Value: @(card?.Tcgplayer?.Prices?.Holofoil?.Market != null ? "$" + card.Tcgplayer.Prices.Holofoil.Market.ToString("0.00") : "N/A")</span>
-                </div>
-                <div class="rounded-xl overflow-hidden drop-shadow-md flex hover:scale-105 hover:z-1 hover:drop-shadow-xl transition duration-300 ease-in-out">
-                    <img src="@card?.Images?.Small?.ToString()" alt="">
-                </div>
-            </a>
+            </div>
         }
         </div>
     </div>
@@ -63,9 +69,7 @@
 
 @code {
     private Boolean searchingInProgress = false;
-    private List<Card> matchedCards = [];
     private List<PokemonCard> matchedPokemonCards = [];
-    private List<TrainerCard> matchedTrainerCards = [];
     private string searchValue = "";
     private List<string> setSeries = [
         "Scarlet & Violet",
