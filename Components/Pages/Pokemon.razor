@@ -5,6 +5,10 @@
 @inject IPokemonTcgApiService PokemonTcgApiService
 @inject IJSRuntime JSRuntime
 
+@if (searchingInProgress) {
+    <Loader />
+}
+
 <div class="hero bg-base-200 grow">
     <div class="hero-content text-center mb-10!">
         <div class="max-w-md">
@@ -39,11 +43,13 @@
         if (searchValue.Trim().Length == 0) {
             return;
         }
+        searchingInProgress = true;
         string formattedSearchValue = searchValue.ToLower().Trim();
         matchedCards = await PokemonTcgApiService.GetPokemonByName(formattedSearchValue);
         await JSRuntime.InvokeVoidAsync("console.log", "Results: ");
         matchedCards.ForEach(async card => {
-        await JSRuntime.InvokeVoidAsync("console.log", card.Name.ToString());
+            await JSRuntime.InvokeVoidAsync("console.log", card.Name.ToString());
         });
+        searchingInProgress = false;
     }
 }
