@@ -1,12 +1,16 @@
 @page "/pokemon"
 @rendermode InteractiveServer
+
 @using PomToolbox.Services.Interfaces
 @using PokemonTcgSdk.Standard.Features.FilterBuilder.Pokemon
 @using PokemonTcgSdk.Standard.Features.FilterBuilder.Trainer
 @using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Set
 @using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Cards
+@using Blazored.LocalStorage;
+
 @inject IPokemonTcgApiService PokemonTcgApiService
 @inject IJSRuntime JSRuntime
+@inject ILocalStorageService LocalStorage
 
 @if (searchingInProgress) {
     <Loader />
@@ -33,6 +37,7 @@
     </div>
 </div>
 
+@* TODO: Make below a component *@
 @if (matchedPokemonCards.Count > 0) {
     <div class="w-full bg-base-200 mb-auto grow py-4">
         <div class="w-full md:w-3xl xl:w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6 justify-items-center">

@@ -3,6 +3,8 @@ using PomToolbox.Components;
 using PomToolbox.Services.ApiServices;
 using PomToolbox.Services.Interfaces;
 
+using Blazored.LocalStorage;
+
 var builder = WebApplication.CreateBuilder(args);
 DotEnv.Load();
 
@@ -11,7 +13,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddScoped<IPokemonTcgApiService, PokemonTcgApiService>();
-
+builder.Services.AddBlazoredLocalStorage();
 
 var app = builder.Build();
 
