@@ -1,10 +1,17 @@
+using dotenv.net;
 using PomToolbox.Components;
+using PomToolbox.Services.ApiServices;
+using PomToolbox.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddScoped<IPokemonTcgApiService, PokemonTcgApiService>();
+
+DotEnv.Load();
 
 var app = builder.Build();
 
