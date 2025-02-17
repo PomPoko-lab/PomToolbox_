@@ -20,11 +20,11 @@
                         <input @bind-value="searchValue" @bind-value:event="oninput" type="search" class="grow" placeholder="Search" />
                     </label>
                     <fieldset class="fieldset pt-0">
-                        <select disabled="@disabledSetsInput" class="select">
-                            <option disabled selected>Set</option>
-                            <option>Chrome</option>
-                            <option>FireFox</option>
-                            <option>Safari</option>
+                        <select class="select">
+                            <option selected>Any Series</option>
+                            @foreach (string series in setSeries) {
+                                <option value="@series">@series</option>
+                            }
                         </select>
                         <span class="fieldset-label">Optional</span>
                     </fieldset>
@@ -56,8 +56,12 @@
     private Boolean searchingInProgress = false;
     private List<PokemonCard> matchedCards = [];
     private string searchValue = "";
-
-    private List<Set> sets = [];
+    private List<string> setSeries = [
+        "Scarlet & Violet",
+        "Sword & Shield",
+        "Sun & Moon",
+        "XY",
+    ];
     private Boolean disabledSetsInput = true;
 
     @* protected override async Task OnAfterRenderAsync(bool firstRender) {
