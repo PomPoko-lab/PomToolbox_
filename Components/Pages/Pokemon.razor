@@ -34,10 +34,10 @@
 </div>
 
 @if (matchedPokemonCards.Count > 0) {
-    <div class="w-full bg-base-200 mb-auto grow">
+    <div class="w-full bg-base-200 mb-auto grow py-4">
         <div class="w-full md:w-3xl xl:w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6 justify-items-center">
         @foreach (PokemonCard card in matchedPokemonCards) {
-            <div class="card bg-base-100 shadow-md border-primary">
+            <div class="card bg-base-100 shadow-sm border-primary">
                 <figure>
                     <img class="p-3" src="@card?.Images?.Small?.ToString()"/>
                 </figure>
