@@ -17,12 +17,14 @@
     </div>
 </div>
 
-<div class="max-w-xl mx-auto p-3">
-@foreach (PokemonCard card in matchedCards) {
-    <div>
-        <img src="@card.Images.Large.ToString()" alt="">
+<div class="w-full bg-base-200">
+    <div class="w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+    @foreach (PokemonCard card in matchedCards) {
+        <div class="rounded-xl overflow-hidden drop-shadow-md flex hover:scale-110 hover:z-1 hover:drop-shadow-xl transition duration-300 ease-in-out">
+            <img src="@card.Images.Large.ToString()" alt="">
+        </div>
+    }
     </div>
-}
 </div>
 
 
