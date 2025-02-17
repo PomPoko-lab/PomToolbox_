@@ -4,6 +4,7 @@ using PomToolbox.Services.ApiServices;
 using PomToolbox.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
+DotEnv.Load();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -11,7 +12,6 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped<IPokemonTcgApiService, PokemonTcgApiService>();
 
-DotEnv.Load();
 
 var app = builder.Build();
 
