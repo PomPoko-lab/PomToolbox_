@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @using PomToolbox.Services.Interfaces
 @using PokemonTcgSdk.Standard.Features.FilterBuilder.Pokemon
+@using PokemonTcgSdk.Standard.Features.FilterBuilder.Trainer
 @using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Set
 @using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Cards
 @inject IPokemonTcgApiService PokemonTcgApiService
@@ -32,10 +33,20 @@
     </div>
 </div>
 
-@if (matchedCards.Count > 0) {
+@if (matchedPokemonCards.Count > 0 || matchedTrainerCards.Count > 0) {
     <div class="w-full bg-base-200 mb-auto">
         <div class="w-full md:w-2xl xl:w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6 justify-items-center">
-        @foreach (PokemonCard card in matchedCards) {
+        @foreach (PokemonCard card in matchedPokemonCards) {
+            <a href="@card.Tcgplayer?.Url.ToString()" target="_blank" class="tooltip">
+                <div class="tooltip-content">
+                    <span>Market Value: @(card?.Tcgplayer?.Prices?.Holofoil?.Market != null ? "$" + card.Tcgplayer.Prices.Holofoil.Market.ToString("0.00") : "N/A")</span>
+                </div>
+                <div class="rounded-xl overflow-hidden drop-shadow-md flex hover:scale-105 hover:z-1 hover:drop-shadow-xl transition duration-300 ease-in-out">
+                    <img src="@card?.Images?.Small?.ToString()" alt="">
+                </div>
+            </a>
+        }
+        @foreach (TrainerCard card in matchedTrainerCards) {
             <a href="@card.Tcgplayer?.Url.ToString()" target="_blank" class="tooltip">
                 <div class="tooltip-content">
                     <span>Market Value: @(card?.Tcgplayer?.Prices?.Holofoil?.Market != null ? "$" + card.Tcgplayer.Prices.Holofoil.Market.ToString("0.00") : "N/A")</span>
@@ -52,7 +63,9 @@
 
 @code {
     private Boolean searchingInProgress = false;
-    private List<PokemonCard> matchedCards = [];
+    private List<Card> matchedCards = [];
+    private List<PokemonCard> matchedPokemonCards = [];
+    private List<TrainerCard> matchedTrainerCards = [];
     private string searchValue = "";
     private List<string> setSeries = [
         "Scarlet & Violet",
@@ -77,20 +90,21 @@
             return;
         }
         searchingInProgress = true;
+
+        matchedPokemonCards = await SearchPokemons();
+
+        searchingInProgress = false;
+    }
+
+    private async Task<List<PokemonCard>> SearchPokemons() {
         string formattedSearchValue = searchValue.ToLower().Trim();
-        PokemonFilterCollection<string, string> filter = PokemonFilterBuilder.CreatePokemonFilter();
-        filter.AddName(searchValue.ToLower() + "*");
+        PokemonFilterCollection<string, string> pokemonCardsFilter = PokemonFilterBuilder.CreatePokemonFilter();
+        pokemonCardsFilter.AddName(searchValue.ToLower() + "*");
 
         if (searchSeries.Length > 0) {
-            filter.AddSetSeries(searchSeries);
+            pokemonCardsFilter.AddSetSeries(searchSeries);
         }
 
-        matchedCards = await PokemonTcgApiService.GetPokemonByName(filter);
-
-        await JSRuntime.InvokeVoidAsync("console.log", "Results: ");
-        matchedCards.ForEach(async card => {
-            await JSRuntime.InvokeVoidAsync("console.log", card.Name.ToString());
-        });
-        searchingInProgress = false;
+        return await PokemonTcgApiService.GetPokemonCards(pokemonCardsFilter); 
     }
 }

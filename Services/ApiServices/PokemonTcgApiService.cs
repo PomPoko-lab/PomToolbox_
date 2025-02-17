@@ -19,7 +19,7 @@ public class PokemonTcgApiService : IPokemonTcgApiService
         this.pokeclient = new PokemonApiClient(apiKey);
     }
 
-    public async Task<List<PokemonCard>> GetPokemonByName(PokemonFilterCollection<string, string>? filter)
+    public async Task<List<PokemonCard>> GetPokemonCards(PokemonFilterCollection<string, string>? filter)
     {
         try {
             if (filter == null) {

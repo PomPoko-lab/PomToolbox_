@@ -6,7 +6,7 @@ namespace PomToolbox.Services.Interfaces
 {
     public interface IPokemonTcgApiService
     {
-        Task<List<PokemonCard>> GetPokemonByName(PokemonFilterCollection<string, string>? filter);
+        Task<List<PokemonCard>> GetPokemonCards(PokemonFilterCollection<string, string>? filter);
         Task<List<Set>> GetSets();
     }
 }
