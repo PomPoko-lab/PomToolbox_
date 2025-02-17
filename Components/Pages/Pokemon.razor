@@ -10,22 +10,36 @@
         <div class="max-w-md">
             <label class="input lg:min-w-sm">
                 <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></g></svg>
-                <input type="search" class="grow" placeholder="Search" />
+                <input @bind-value="searchValue" @bind-value:event="oninput" type="search" class="grow" placeholder="Search" />
             </label>
-            <button class="btn btn-primary" @onclick="SearchForCard">Search</button>
+            <button class="btn btn-primary" @onclick="SearchForCards">Search</button>
         </div>
     </div>
 </div>
 
-@code {
-    private string? apiResponse;
+<div class="max-w-xl mx-auto p-3">
+@foreach (PokemonCard card in matchedCards) {
+    <div>
+        <img src="@card.Images.Large.ToString()" alt="">
+    </div>
+}
+</div>
 
-    private async Task SearchForCard()
+
+@code {
+    private List<PokemonCard> matchedCards = [];
+    private string searchValue = "";
+
+    private async Task SearchForCards()
     {
-      List<PokemonCard> matchedCards = await PokemonTcgApiService.GetPokemonByName("Venusaur");
-      await JSRuntime.InvokeVoidAsync("console.log", "Results: ");
-      matchedCards.ForEach(async card => {
+        if (searchValue.Trim().Length == 0) {
+            return;
+        }
+        string formattedSearchValue = searchValue.ToLower().Trim();
+        matchedCards = await PokemonTcgApiService.GetPokemonByName(formattedSearchValue);
+        await JSRuntime.InvokeVoidAsync("console.log", "Results: ");
+        matchedCards.ForEach(async card => {
         await JSRuntime.InvokeVoidAsync("console.log", card.Name.ToString());
-      });
+        });
     }
 }
