@@ -19,10 +19,12 @@ public class PokemonTcgApiService : IPokemonTcgApiService
         this.pokeclient = new PokemonApiClient(apiKey);
     }
 
-    public async Task<List<PokemonCard>> GetPokemonByName(string name)
+    public async Task<List<PokemonCard>> GetPokemonByName(PokemonFilterCollection<string, string>? filter)
     {
         try {
-            var filter = PokemonFilterBuilder.CreatePokemonFilter().AddName(name + "*");
+            if (filter == null) {
+                filter = [];
+            }
             ApiResourceList<PokemonCard> response = await this.pokeclient.GetApiResourceAsync<PokemonCard>(filter);
             List<PokemonCard> cards = response.Results;
 
