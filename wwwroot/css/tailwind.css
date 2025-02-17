@@ -2450,6 +2450,9 @@
     --tw-ease: var(--ease-out);
     transition-timing-function: var(--ease-out);
   }
+  .\[f\:\/Programming\/PomToolbox_\/App\.razor\] {
+    f: /Programming/PomToolbox /App.razor;
+  }
   .\[f\:\/Programming\/PomToolbox_\/Components\/App\.razor\] {
     f: /Programming/PomToolbox /Components/App.razor;
   }
@@ -2500,6 +2503,12 @@
   }
   .\[f\:\/Programming\/PomToolbox_\/Pages\/Weather\.razor\] {
     f: /Programming/PomToolbox /Pages/Weather.razor;
+  }
+  .\[f\:\/Programming\/PomToolbox_\/Routes\.razor\] {
+    f: /Programming/PomToolbox /Routes.razor;
+  }
+  .\[f\:\/Programming\/PomToolbox_\/_Imports\.razor\] {
+    f: /Programming/PomToolbox / Imports.razor;
   }
   .btn-primary {
     --btn-color: var(--color-primary);
