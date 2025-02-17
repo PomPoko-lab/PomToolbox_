@@ -20,8 +20,8 @@ public class PokemonTcgApiService : IPokemonTcgApiService
     {
         try 
         {
-            var filter = PokemonFilterBuilder.CreatePokemonFilter().AddName(name);
-            ApiResourceList<PokemonCard> response = await this.pokeclient.GetApiResourceAsync<PokemonCard>(10, 1, filter);
+            var filter = PokemonFilterBuilder.CreatePokemonFilter().AddName(name + "*");
+            ApiResourceList<PokemonCard> response = await this.pokeclient.GetApiResourceAsync<PokemonCard>(filter);
             List<PokemonCard> cards = response.Results;
             if (cards.Count == 0)
             {

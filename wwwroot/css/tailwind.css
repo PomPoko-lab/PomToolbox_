@@ -2020,6 +2020,9 @@
   .mb-10\! {
     margin-bottom: calc(var(--spacing) * 10) !important;
   }
+  .mb-auto {
+    margin-bottom: auto;
+  }
   .badge {
     display: inline-flex;
     align-items: center;
@@ -2452,6 +2455,16 @@
       }
     }
   }
+  .hover\:scale-105 {
+    &:hover {
+      @media (hover: hover) {
+        --tw-scale-x: 105%;
+        --tw-scale-y: 105%;
+        --tw-scale-z: 105%;
+        scale: var(--tw-scale-x) var(--tw-scale-y);
+      }
+    }
+  }
   .hover\:scale-110 {
     &:hover {
       @media (hover: hover) {
@@ -2480,6 +2493,16 @@
       }
     }
   }
+  .md\:w-2xl {
+    @media (width >= 48rem) {
+      width: var(--container-2xl);
+    }
+  }
+  .md\:w-6xl {
+    @media (width >= 48rem) {
+      width: var(--container-6xl);
+    }
+  }
   .md\:max-w-xs {
     @media (width >= 48rem) {
       max-width: var(--container-xs);
@@ -2495,6 +2518,11 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
+  .lg\:w-6xl {
+    @media (width >= 64rem) {
+      width: var(--container-6xl);
+    }
+  }
   .lg\:min-w-sm {
     @media (width >= 64rem) {
       min-width: var(--container-sm);
@@ -2503,6 +2531,21 @@
   .lg\:grid-cols-3 {
     @media (width >= 64rem) {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .lg\:grid-cols-5 {
+    @media (width >= 64rem) {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+  .xl\:w-6xl {
+    @media (width >= 80rem) {
+      width: var(--container-6xl);
+    }
+  }
+  .xl\:grid-cols-5 {
+    @media (width >= 80rem) {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
   }
 }
