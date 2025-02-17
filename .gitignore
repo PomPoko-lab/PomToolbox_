@@ -1,4 +1,6 @@
 .env
+wwwroot/css/tailwind.css
+
 # Binaries
 **/bin
 **/obj
