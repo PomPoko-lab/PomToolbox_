@@ -16,6 +16,47 @@
     <Loader />
 }
 
+@* @if (userSavedCards.Count > 0) { *@
+@if (true) {
+    <button class="btn btn-primary btn-circle fixed bottom-10 right-10 z-2" onclick="collection_modal.showModal()">
+        <i class="fa-regular fa-rectangle-list text-primary-content"></i>
+    </button>
+}
+
+<dialog id="collection_modal" class="modal">
+  <div class="modal-box">
+    <h3 class="text-lg font-boad mb-4">Your Collection</h3>
+    @if (userSavedCards.Count == 0) {
+        <p>No items added to collection</p>
+    }
+    @foreach (PokemonCard card in userSavedCards) {
+    <div class="card card-side bg-base-100 shadow-sm">
+        <figure>
+            <img class="max-h-[200px] p-2" src="@card?.Images?.Small?.ToString()"/>
+        </figure>
+        <div class="card-body p-4">
+            <h2 class="card-title">@card?.Name?.ToString()</h2>
+            <p>@card?.Rarity?.ToString()</p>
+            <p class="my-2">
+                Market: 
+                <strong>
+                    @(card?.Tcgplayer?.Prices?.Holofoil?.Market != null ? "$" + card.Tcgplayer.Prices.Holofoil.Market.ToString("0.00") : "N/A")
+                </strong>
+            </p>
+            <div class="card-actions justify-end">
+                <button class="btn btn-error btn-outline btn-circle" @onclick="@(()=> AddCard(card))">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
 <div class="hero bg-base-200 grow">
     <div class="hero-content text-center mb-10!">
         <div class="max-w-md">
@@ -60,7 +101,7 @@
                         <a href="@card?.Tcgplayer?.Url.ToString()" target="_blank">
                             <img class="object-contain max-w-[50px]" src="/assets/logos/tcgplayer-logo.webp" alt="tcgplayer-logo">
                         </a>
-                        <button class="btn btn-primary btn-outline btn-circle">
+                        <button class="btn btn-primary btn-outline btn-circle" @onclick="@(()=> AddCard(card))">
                             <i class="fa-solid fa-plus"></i>
                         </button>
                     </div>
@@ -84,6 +125,9 @@
     ];
     private string searchSeries = "";
 
+    private List<PokemonCard> userSavedCards = [];
+    private Boolean showCollectionModal = false;
+
     @* protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
             sets = await PokemonTcgApiService.GetSets();
@@ -93,15 +137,16 @@
         }
     } *@
 
-    private async Task SearchForCards()
-    {
+    private void AddCard(PokemonCard card) {
+        userSavedCards.Add(card);
+    }
+
+    private async Task SearchForCards() {
         if (searchValue.Trim().Length == 0) {
             return;
         }
         searchingInProgress = true;
-
         matchedPokemonCards = await SearchPokemons();
-
         searchingInProgress = false;
     }
 
