@@ -1,6 +1,7 @@
 @page "/pokemon"
 @rendermode InteractiveServer
 
+@using PomToolbox.Components
 @using PomToolbox.Services.Interfaces
 @using PokemonTcgSdk.Standard.Features.FilterBuilder.Pokemon
 @using PokemonTcgSdk.Standard.Features.FilterBuilder.Trainer
@@ -11,6 +12,8 @@
 @inject IPokemonTcgApiService PokemonTcgApiService
 @inject IJSRuntime JSRuntime
 @inject ILocalStorageService LocalStorage
+
+<PageTitle>Pokemon</PageTitle>
 
 @if (searchingInProgress) {
     <Loader />
@@ -29,7 +32,7 @@
     @if (userSavedCards.Count == 0) {
         <p>No items added to collection</p>
     }
-    @foreach (PokemonCard card in userSavedCards) {
+    @foreach (var (card, index) in userSavedCards.Select((card, index) => (card, index))) {
     <div class="card card-side bg-base-100 shadow-sm">
         <figure>
             <img class="max-h-[200px] p-2" src="@card?.Images?.Small?.ToString()"/>
@@ -44,7 +47,7 @@
                 </strong>
             </p>
             <div class="card-actions justify-end">
-                <button class="btn btn-error btn-outline btn-circle" @onclick="@(()=> AddCard(card))">
+                <button class="btn btn-error btn-outline btn-circle" @onclick="@(()=> RemoveCard(index))">
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </div>
@@ -139,6 +142,10 @@
 
     private void AddCard(PokemonCard card) {
         userSavedCards.Add(card);
+    }
+
+    private void RemoveCard(int cardIndex) {
+        userSavedCards.RemoveAt(cardIndex);
     }
 
     private async Task SearchForCards() {
