@@ -18,7 +18,11 @@ services:
     volumes:
       - .:/var/www/app
     working_dir: /var/www/app/PomToolbox
-    command: dotnet watch
+    command: >
+      sh -c "
+        dotnet restore
+        dotnet watch
+        "
 
     ports:
       - "5089:5089"
