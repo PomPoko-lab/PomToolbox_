@@ -1,9 +1,44 @@
 
 
 @import "tailwindcss";
-@plugin "daisyui" {
-    themes: cupcake --default;
+@plugin "daisyui";
+
+/* Created with https://v5.daisyui.com/theme-generator/ */
+@plugin "daisyui/theme" {
+  name: "catpuccin macchiato";
+  default: true;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: #24283b;
+  --color-base-200: #202133;
+  --color-base-300: #1c1e30;
+  --color-base-content: #ced1de;
+  --color-primary: #b7bef9;
+  --color-primary-content: #060f25;
+  --color-secondary: #b8c0e2;
+  --color-secondary-content: #1c1416;
+  --color-accent: #f5aa7f;
+  --color-accent-content: #060e12;
+  --color-neutral: #202133;
+  --color-neutral-content: #c5cfdb;
+  --color-info: #8badf4;
+  --color-info-content: #070c0e;
+  --color-success: #a6da94;
+  --color-success-content: #140f05;
+  --color-warning: #eed5a0;
+  --color-warning-content: #0e0b0f;
+  --color-error: #ee8798;
+  --color-error-content: #2e030a;
+  --radius-selector: 0.25rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
 }
+
 
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
