@@ -136,21 +136,34 @@
     private Double userSavedCardsTotal = 0.00;
     private Boolean showCollectionModal = false;
 
-    @* protected override async Task OnAfterRenderAsync(bool firstRender) {
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
-            sets = await PokemonTcgApiService.GetSets();
-            if (sets.Count > 0) {
-                disabledSetsInput = false;
+            if (await LocalStorage.ContainKeyAsync("savedCards")) {
+                List<PokemonCard>? localStorageSavedCards = await LocalStorage.GetItemAsync<List<PokemonCard>>("savedCards");
+                if (localStorageSavedCards != null) {
+                    userSavedCards = localStorageSavedCards;
+                }
             }
+
+            if (await LocalStorage.ContainKeyAsync("savedCardsTotal")) {
+                double? localStorageSavedCardsTotal = await LocalStorage.GetItemAsync<Double>("savedCardsTotal");
+                if (localStorageSavedCardsTotal != null) {
+                    userSavedCardsTotal = localStorageSavedCardsTotal.GetValueOrDefault(0.00);
+                }
+            }
+
+            StateHasChanged();
         }
-    } *@
+    }
 
     private void AddCard(PokemonCard card) {
         userSavedCards.Add(card);
 
         double cardMarketPrice = card.Tcgplayer?.Prices?.Holofoil?.Market ?? 0.00;
         userSavedCardsTotal = userSavedCardsTotal + cardMarketPrice;
-        // Testing
+
+        LocalStorage.SetItemAsync("savedCards", userSavedCards);
+        LocalStorage.SetItemAsync("savedCardsTotal", userSavedCardsTotal);
     }
 
     private void RemoveCard(int cardIndex) {
@@ -158,6 +171,9 @@
         userSavedCardsTotal = userSavedCardsTotal - card.Tcgplayer?.Prices?.Holofoil?.Market ?? 0.00;
 
         userSavedCards.RemoveAt(cardIndex);
+
+        LocalStorage.SetItemAsync("savedCards", userSavedCards);
+        LocalStorage.SetItemAsync("savedCardsTotal", userSavedCardsTotal);
     }
 
     private async Task SearchForCards() {
