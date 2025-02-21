@@ -1,5 +1,4 @@
 name: pomtools
-
 services:
   node:
     image: node:lts-alpine
@@ -8,21 +7,25 @@ services:
     working_dir: /var/www/app/PomToolbox
     command: >
       sh -c "
-        npm install
-        npm run dev
+        npm install &&
+        npm run dev &&
         tail -f /dev/null
-        "
-  
+      "
+
   dotnet:
-    image: mcr.microsoft.com/dotnet/sdk:9.0
+    build:
+      context: .
+      dockerfile: Dockerfile.dotnet
     volumes:
-      - .:/var/www/app
+      - app-data:/var/www/app
     working_dir: /var/www/app
     command: >
       sh -c "
-        dotnet restore
+        dotnet restore &&
         tail -f /dev/null
-        "
-
+      "
     ports:
       - "5089:5089"
+
+volumes:
+  app-data:
