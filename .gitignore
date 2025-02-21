@@ -1,5 +1,5 @@
 .env
-wwwroot/css/tailwind.css
+./PomToolbox/wwwroot/css/tailwind.css
 
 # Binaries
 **/bin

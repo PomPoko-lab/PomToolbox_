@@ -1,14 +1,13 @@
 name: pomtools
 services:
-  node:
+  tailwind:
     image: node:lts-alpine
     volumes:
-      - .:/var/www/app
+      - app-data:/var/www/app
     working_dir: /var/www/app/PomToolbox
     command: >
       sh -c "
         npm install &&
-        npm run dev &&
         tail -f /dev/null
       "
 
@@ -18,6 +17,8 @@ services:
       dockerfile: Dockerfile.dotnet
     volumes:
       - app-data:/var/www/app
+      - .git:/var/www/app/.git
+      - .gitignore:/var/www/app/.gitignore
     working_dir: /var/www/app
     command: >
       sh -c "

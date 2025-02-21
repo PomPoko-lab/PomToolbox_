@@ -6,12 +6,6 @@ COPY . .
 
 RUN dotnet restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
-
-WORKDIR /var/www/app
-
-COPY --from=build /var/www/app .
-
 EXPOSE 5089
 
 CMD ["dotnet", "run"]
