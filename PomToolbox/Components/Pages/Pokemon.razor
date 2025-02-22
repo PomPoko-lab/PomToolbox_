@@ -152,11 +152,13 @@
     private List<Toast> toastMessages = [];
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
+        bool triggerStateChanged = false;
         if (firstRender) {
             if (await LocalStorage.ContainKeyAsync("savedCards")) {
                 List<PokemonCard>? localStorageSavedCards = await LocalStorage.GetItemAsync<List<PokemonCard>>("savedCards");
                 if (localStorageSavedCards != null) {
                     userSavedCards = localStorageSavedCards;
+                    triggerStateChanged = true;
                 }
             }
 
@@ -164,9 +166,12 @@
                 double? localStorageSavedCardsTotal = await LocalStorage.GetItemAsync<Double>("savedCardsTotal");
                 if (localStorageSavedCardsTotal != null) {
                     userSavedCardsTotal = localStorageSavedCardsTotal.GetValueOrDefault(0.00);
+                    triggerStateChanged = true;
                 }
             }
+        }
 
+        if (triggerStateChanged) {
             StateHasChanged();
         }
     }
