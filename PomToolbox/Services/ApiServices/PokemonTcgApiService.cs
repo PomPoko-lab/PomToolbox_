@@ -16,6 +16,9 @@ public class PokemonTcgApiService : IPokemonTcgApiService
     public PokemonTcgApiService() 
     {
         string? apiKey = Environment.GetEnvironmentVariable("POKEMONTCG_API_KEY");
+        if (apiKey == null) {
+            throw new Exception("POKEMONTCG_API_KEY is not set");
+        }
         this.pokeclient = new PokemonApiClient(apiKey);
     }
 
