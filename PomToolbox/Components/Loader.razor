@@ -1,4 +1,9 @@
-<div class="absolute top-0 left-0 bg-base-300 min-w-screen min-h-screen z-500 flex items-center justify-center opacity-75">
+<div class="absolute top-0 left-0 bg-base-300 min-w-screen min-h-screen z-500 flex items-center justify-center opacity-75 @(Display ? "" : "hidden")">
     <span class="loading loading-bars loading-xl"></span>
 </div>
 
+@code {
+    [Parameter]
+    [EditorRequired]
+    public bool Display { get;set; }
+}

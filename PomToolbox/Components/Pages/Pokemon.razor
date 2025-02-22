@@ -16,9 +16,7 @@
 
 <PageTitle>Pokemon</PageTitle>
 
-@if (searchingInProgress) {
-    <Loader />
-}
+<Loader Display="@searchingInProgress" />
 
 @if (toastMessages.Count > 0) {
     <div class="toast toast-top toast-center z-1000 px-10">
