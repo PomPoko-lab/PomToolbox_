@@ -17,6 +17,7 @@
 <PageTitle>Pokemon</PageTitle>
 
 <Loader Display="@searchingInProgress" />
+<Toaster @ref="toaster"/>
 
 @if (toastMessages.Count > 0) {
     <div class="toast toast-top toast-center z-1000 px-10">
@@ -134,6 +135,7 @@
 
 @code {
     private bool searchingInProgress = false;
+    private Toaster? toaster;
     private List<PokemonCard> matchedPokemonCards = [];
     private string searchValue = "";
     private List<string> setSeries = [
@@ -195,7 +197,7 @@
         LocalStorage.SetItemAsync("savedCardsTotal", userSavedCardsTotal);
 
         #pragma warning disable CS4014 // Just show the toast
-        addToast(Toast.ToastType.Success, $"Added {card.Name} to your collection for ${cardMarketPrice.ToString("0.00")}");
+        toaster?.AddToast(Toast.ToastType.Success, $"Added {card.Name} to your collection for ${cardMarketPrice.ToString("0.00")}");
     }
 
     private void RemoveCard(int cardIndex) {
@@ -206,7 +208,7 @@
 
         LocalStorage.SetItemAsync("savedCards", userSavedCards);
         LocalStorage.SetItemAsync("savedCardsTotal", userSavedCardsTotal);
-        addToast(Toast.ToastType.Success, $"Removed {card.Name} from your collection");
+        toaster?.AddToast(Toast.ToastType.Success, $"Removed {card.Name} from your collection");
     }
 
     private async Task SearchForCards() {

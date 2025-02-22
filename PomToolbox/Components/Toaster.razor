@@ -1,0 +1,26 @@
+@using PomToolbox.UIModels
+
+@if (ToastMessages.Count > 0) {
+    <div class="toast toast-top toast-center z-1000 px-10">
+        @foreach (Toast toast in ToastMessages) {
+            <div class="alert @toast.GetToastTypeClass() gap-0 shadow">
+                <span>@toast.Message</span>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Toast> ToastMessages { get; set; } = [];
+    public async Task AddToast(Toast.ToastType type, string message) {
+        Toast toast = new Toast {
+            Message = message,
+            Type = Toast.ToastType.Success
+        };
+        this.ToastMessages.Add(toast);
+        StateHasChanged();
+        await Task.Delay(Toast.Duration);
+        this.ToastMessages.Remove(toast);
+        StateHasChanged();
+    }
+}
