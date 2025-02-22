@@ -200,9 +200,12 @@
             return;
         }
         searchingInProgress = true;
-        matchedPokemonCards = await SearchPokemons();
-        if (matchedPokemonCards.Count == 0) {
+        List<PokemonCard> searchedCardResults = await SearchPokemons();
+
+        if (searchedCardResults.Count == 0) {
             toaster?.AddToast(Toast.ToastType.Warning, "No cards were found");
+        } else {
+            matchedPokemonCards = searchedCardResults;
         }
         searchingInProgress = false;
     }
