@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "dev": "tailwindcss -i ./tailwind/input.css -o ./wwwroot/css/tailwind.css --watch"
+    "dev": "tailwindcss -i ./tailwind/input.css -o ./wwwroot/css/tailwind.css --watch",
+    "build": "tailwindcss -i ./tailwind/input.css -o ./wwwroot/css/tailwind.css"
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.0.6",

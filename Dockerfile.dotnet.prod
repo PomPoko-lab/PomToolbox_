@@ -1,0 +1,27 @@
+# Stage 1: Node.js/Tailwind build
+FROM node:lts-alpine AS nodebuild
+WORKDIR /var/www/app/PomToolbox
+COPY PomToolbox/package*.json ./
+RUN npm install --production
+COPY PomToolbox/ ./
+RUN npm run build
+
+# Stage 2: .NET Build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /var/www/app
+COPY . .
+
+# Copy built Node assets from previous stage
+COPY --from=nodebuild /var/www/app/PomToolbox/wwwroot /var/www/app/PomToolbox/wwwroot
+
+RUN dotnet restore
+RUN dotnet publish -c Release -o out
+
+# Final Stage: Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
+WORKDIR /var/www/app
+COPY --from=build /var/www/app/out ./
+
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+ENTRYPOINT ["dotnet", "PomToolbox.dll"]
