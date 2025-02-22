@@ -19,8 +19,21 @@
     <Loader />
 }
 
+@if (successToastMessages.Count > 0) {
+    <div class="toast toast-top toast-center z-1000 px-10">
+        @foreach (String successToastMessage in successToastMessages) {
+            <div class="alert alert-success gap-0 shadow">
+                <span>@successToastMessage</span>
+            </div>
+        }
+    </div>
+}
+
 @if (userSavedCards.Count > 0) {
-    <button class="btn btn-primary btn-circle fixed bottom-10 right-10 z-2" onclick="collection_modal.showModal()">
+    <button class="btn btn-primary btn-circle fixed bottom-10 right-10 z-2 shadow-lg btn-lg" onclick="collection_modal.showModal()">
+        <div class="badge badge-accent badge-sm rounded-full absolute -top-2 -right-2 shadow">
+            @userSavedCards.Count
+        </div>
         <i class="fa-regular fa-rectangle-list text-primary-content"></i>
     </button>
 }
@@ -123,7 +136,7 @@
 @code {
     private Boolean searchingInProgress = false;
     private List<PokemonCard> matchedPokemonCards = [];
-    private string searchValue = "";
+    private String searchValue = "";
     private List<string> setSeries = [
         "Scarlet & Violet",
         "Sword & Shield",
@@ -134,6 +147,8 @@
 
     private List<PokemonCard> userSavedCards = [];
     private Double userSavedCardsTotal = 0.00;
+
+    private List<string> successToastMessages = [];
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
@@ -155,14 +170,23 @@
         }
     }
 
+    protected async Task triggerSuccessToast(String message) {
+        successToastMessages.Add(message);
+        await Task.Delay(2500);
+        successToastMessages.Remove(message);
+        StateHasChanged();
+    }
+
     private void AddCard(PokemonCard card) {
         userSavedCards.Add(card);
 
-        double cardMarketPrice = card.Tcgplayer?.Prices?.Holofoil?.Market ?? 0.00;
+        Double cardMarketPrice = card.Tcgplayer?.Prices?.Holofoil?.Market ?? 0.00;
         userSavedCardsTotal = userSavedCardsTotal + cardMarketPrice;
 
         LocalStorage.SetItemAsync("savedCards", userSavedCards);
         LocalStorage.SetItemAsync("savedCardsTotal", userSavedCardsTotal);
+        #pragma warning disable CS4014 // Just show the toast
+        triggerSuccessToast($"Added {card.Name} to your collection for ${cardMarketPrice.ToString("0.00")}");
     }
 
     private void RemoveCard(int cardIndex) {
@@ -185,7 +209,7 @@
     }
 
     private async Task<List<PokemonCard>> SearchPokemons() {
-        string formattedSearchValue = searchValue.ToLower().Trim();
+        String formattedSearchValue = searchValue.ToLower().Trim();
         PokemonFilterCollection<string, string> pokemonCardsFilter = PokemonFilterBuilder.CreatePokemonFilter();
         pokemonCardsFilter.AddName(searchValue.ToLower() + "*");
 
