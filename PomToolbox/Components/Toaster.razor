@@ -15,7 +15,7 @@
     public async Task AddToast(Toast.ToastType type, string message) {
         Toast toast = new Toast {
             Message = message,
-            Type = Toast.ToastType.Success
+            Type = type,
         };
         this.ToastMessages.Add(toast);
         StateHasChanged();
