@@ -2,7 +2,7 @@
 FROM node:lts-alpine AS nodebuild
 WORKDIR /var/www/app/PomToolbox
 COPY PomToolbox/package*.json ./
-RUN npm install --production
+RUN npm install
 COPY PomToolbox/ ./
 RUN npm run build
 
