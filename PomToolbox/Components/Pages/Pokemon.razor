@@ -3,6 +3,7 @@
 
 @using PomToolbox.Components
 @using PomToolbox.Services.Interfaces
+@using PomToolbox.UIModels
 @using PokemonTcgSdk.Standard.Features.FilterBuilder.Pokemon
 @using PokemonTcgSdk.Standard.Features.FilterBuilder.Trainer
 @using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Set
@@ -19,11 +20,11 @@
     <Loader />
 }
 
-@if (successToastMessages.Count > 0) {
+@if (toastMessages.Count > 0) {
     <div class="toast toast-top toast-center z-1000 px-10">
-        @foreach (String successToastMessage in successToastMessages) {
-            <div class="alert alert-success gap-0 shadow">
-                <span>@successToastMessage</span>
+        @foreach (Toast toast in toastMessages) {
+            <div class="alert @toast.GetToastTypeClass() gap-0 shadow">
+                <span>@toast.Message</span>
             </div>
         }
     </div>
@@ -134,9 +135,9 @@
 
 
 @code {
-    private Boolean searchingInProgress = false;
+    private bool searchingInProgress = false;
     private List<PokemonCard> matchedPokemonCards = [];
-    private String searchValue = "";
+    private string searchValue = "";
     private List<string> setSeries = [
         "Scarlet & Violet",
         "Sword & Shield",
@@ -146,9 +147,9 @@
     private string searchSeries = "";
 
     private List<PokemonCard> userSavedCards = [];
-    private Double userSavedCardsTotal = 0.00;
+    private double userSavedCardsTotal = 0.00;
 
-    private List<string> successToastMessages = [];
+    private List<Toast> toastMessages = [];
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender) {
@@ -170,23 +171,28 @@
         }
     }
 
-    protected async Task triggerSuccessToast(String message) {
-        successToastMessages.Add(message);
-        await Task.Delay(2500);
-        successToastMessages.Remove(message);
+    protected async Task addToast(Toast.ToastType type, string message) {
+        Toast toast = new Toast {
+            Message = message,
+            Type = Toast.ToastType.Success
+        };
+        toastMessages.Add(toast);
+        await Task.Delay(Toast.Duration);
+        toastMessages.Remove(toast);
         StateHasChanged();
     }
 
     private void AddCard(PokemonCard card) {
         userSavedCards.Add(card);
 
-        Double cardMarketPrice = card.Tcgplayer?.Prices?.Holofoil?.Market ?? 0.00;
+        double cardMarketPrice = card.Tcgplayer?.Prices?.Holofoil?.Market ?? 0.00;
         userSavedCardsTotal = userSavedCardsTotal + cardMarketPrice;
 
         LocalStorage.SetItemAsync("savedCards", userSavedCards);
         LocalStorage.SetItemAsync("savedCardsTotal", userSavedCardsTotal);
+
         #pragma warning disable CS4014 // Just show the toast
-        triggerSuccessToast($"Added {card.Name} to your collection for ${cardMarketPrice.ToString("0.00")}");
+        addToast(Toast.ToastType.Success, $"Added {card.Name} to your collection for ${cardMarketPrice.ToString("0.00")}");
     }
 
     private void RemoveCard(int cardIndex) {
@@ -197,6 +203,7 @@
 
         LocalStorage.SetItemAsync("savedCards", userSavedCards);
         LocalStorage.SetItemAsync("savedCardsTotal", userSavedCardsTotal);
+        addToast(Toast.ToastType.Success, $"Removed {card.Name} from your collection");
     }
 
     private async Task SearchForCards() {
@@ -209,7 +216,7 @@
     }
 
     private async Task<List<PokemonCard>> SearchPokemons() {
-        String formattedSearchValue = searchValue.ToLower().Trim();
+        string formattedSearchValue = searchValue.ToLower().Trim();
         PokemonFilterCollection<string, string> pokemonCardsFilter = PokemonFilterBuilder.CreatePokemonFilter();
         pokemonCardsFilter.AddName(searchValue.ToLower() + "*");
 
