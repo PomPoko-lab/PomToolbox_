@@ -202,7 +202,7 @@
         searchingInProgress = true;
         matchedPokemonCards = await SearchPokemons();
         if (matchedPokemonCards.Count == 0) {
-            toaster?.AddToast(Toast.ToastType.Warning, "No cards found");
+            toaster?.AddToast(Toast.ToastType.Warning, "No cards were found");
         }
         searchingInProgress = false;
     }
