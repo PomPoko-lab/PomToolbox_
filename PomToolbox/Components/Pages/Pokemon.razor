@@ -179,13 +179,20 @@
 
     private void RemoveCard(int cardIndex) {
         PokemonCard card = userSavedCards.ElementAt(cardIndex);
-        userSavedCardsTotal = userSavedCardsTotal - card.Tcgplayer?.Prices?.Holofoil?.Market ?? 0.00;
+        userSavedCardsTotal = userSavedCardsTotal - (card.Tcgplayer?.Prices?.Holofoil?.Market ?? 0.00);
 
         userSavedCards.RemoveAt(cardIndex);
 
         LocalStorage.SetItemAsync("savedCards", userSavedCards);
         LocalStorage.SetItemAsync("savedCardsTotal", userSavedCardsTotal);
         toaster?.AddToast(Toast.ToastType.Success, $"Removed {card.Name} from your collection");
+
+        // Reset the items if there's now no more items
+        if (userSavedCards.Count == 0) {
+            userSavedCardsTotal = 0.00;
+            LocalStorage.RemoveItemAsync("savedCards");
+            LocalStorage.RemoveItemAsync("savedCardsTotal");
+        }
     }
 
     private async Task SearchForCards() {
@@ -194,6 +201,9 @@
         }
         searchingInProgress = true;
         matchedPokemonCards = await SearchPokemons();
+        if (matchedPokemonCards.Count == 0) {
+            toaster?.AddToast(Toast.ToastType.Warning, "No cards found");
+        }
         searchingInProgress = false;
     }
 
