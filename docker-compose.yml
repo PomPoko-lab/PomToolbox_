@@ -8,8 +8,11 @@ services:
     command: >
       sh -c "
         npm install &&
+        npm run dev &&
         tail -f /dev/null
       "
+    depends_on:
+      - dotnet
 
   dotnet:
     build:
@@ -20,11 +23,8 @@ services:
       - .git:/var/www/app/.git
       - .gitignore:/var/www/app/.gitignore
     working_dir: /var/www/app
-    command: >
-      sh -c "
-        dotnet restore &&
-        tail -f /dev/null
-      "
+    command: tail -f /dev/null
+
     ports:
       - "5089:5089"
 
