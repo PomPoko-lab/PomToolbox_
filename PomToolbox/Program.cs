@@ -26,7 +26,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection();
-// app.UseAntiforgery();
+app.UseAntiforgery();
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
