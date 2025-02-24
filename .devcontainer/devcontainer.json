@@ -16,14 +16,17 @@
 
 	// The optional 'workspaceFolder' property is the path VS Code should open by default when
 	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
-	"workspaceFolder": "/var/www/app/PomToolbox",
+	"workspaceFolder": "/var/www/app",
 	"customizations": {
 		"vscode": {
 			"extensions": [
 				"ms-dotnettools.csharp",
 				"ms-dotnettools.csdevkit",
 				"ms-dotnettools.vscode-dotnet-runtime",
-				"eamodio.gitlens"
+				"eamodio.gitlens",
+				"ecmel.vscode-html-css",
+				"alexcvzz.vscode-sqlite",
+				"cweijan.vscode-database-client2"
 			]
 		}
 	}
