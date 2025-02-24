@@ -11,5 +11,6 @@ RUN dotnet tool install --global dotnet-ef
 WORKDIR /var/www/app/PomToolbox
 RUN export PATH="$PATH:/root/.dotnet/tools" && dotnet ef database update
 RUN dotnet dev-certs https --format PEM --export-path ./certs/temp_cert.pem --no-password
+RUN apt-get update && apt install -y sqlite3
 
 EXPOSE 5089
