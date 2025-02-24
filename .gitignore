@@ -1,6 +1,7 @@
 .env
 PomToolbox/wwwroot/css/tailwind.css
 certs/
+app.db
 
 # Binaries
 **/bin

@@ -8,6 +8,7 @@ services:
     volumes:
       - ./PomToolbox/.env:/var/www/app/.env
       - ./certs:/var/www/app/certs
+      - ./PomTools/Data/app.db:/var/www/app/PomToolbox/Data/app.db
     ports:
       - "80:8080"
       - "443:443"
