@@ -10,6 +10,7 @@ RUN dotnet tool install --global dotnet-ef
 RUN export PATH="$PATH:/root/.dotnet/tools"
 WORKDIR /var/www/app/PomToolbox
 RUN dotnet ef database update
+RUN dotnet dev-certs https --format PEM --export-path ./certs/temp_cert.pem --no-password
 
 WORKDIR /var/www/app
 
