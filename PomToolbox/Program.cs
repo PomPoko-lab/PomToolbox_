@@ -5,6 +5,7 @@ using PomToolbox.Services.Interfaces;
 
 using Blazored.LocalStorage;
 using Microsoft.EntityFrameworkCore;
+using PomToolbox.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 DotEnv.Load();
@@ -17,6 +18,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IPokemonTcgApiService, PokemonTcgApiService>();
+builder.Services.AddScoped<PokemonCollectionService>();
+
 builder.Services.AddBlazoredLocalStorage();
 
 var app = builder.Build();
@@ -28,7 +31,6 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 app.UseAntiforgery();
 

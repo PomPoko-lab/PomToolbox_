@@ -4,12 +4,16 @@
 @using PomToolbox.Components
 @using PomToolbox.Services.Interfaces
 @using PomToolbox.UIModels
+@using PomToolbox.Services
+@using PomToolbox.Data.Models
+
 @using PokemonTcgSdk.Standard.Features.FilterBuilder.Pokemon
 @using PokemonTcgSdk.Standard.Features.FilterBuilder.Trainer
 @using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Set
 @using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Cards
 @using Blazored.LocalStorage;
 
+@inject PokemonCollectionService PokemonCollectionService
 @inject IPokemonTcgApiService PokemonTcgApiService
 @inject IJSRuntime JSRuntime
 @inject ILocalStorageService LocalStorage
@@ -175,6 +179,7 @@
 
         #pragma warning disable CS4014 // Just show the toast
         toaster?.AddToast(Toast.ToastType.Success, $"Added {card.Name} to your collection for ${cardMarketPrice.ToString("0.00")}");
+        this.AddCollection();
     }
 
     private void RemoveCard(int cardIndex) {
@@ -220,5 +225,14 @@
         }
 
         return await PokemonTcgApiService.GetPokemonCards(pokemonCardsFilter); 
+    }
+
+    private async Task AddCollection() {
+        PokemonCollection collection = new PokemonCollection {
+            Name = "My Collection",
+        };
+        await PokemonCollectionService.Create(collection);
+        PokemonCollection? fetchedCollection = await PokemonCollectionService.Get(collection.Id);
+        Console.WriteLine(fetchedCollection?.Name);
     }
 }
