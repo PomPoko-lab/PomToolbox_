@@ -6,4 +6,5 @@ public class ApplicationDbContext : DbContext {
 
     public DbSet<PokemonCollection> PokemonCollections { get; set; }
     public DbSet<PokemonCard> PokemonCards { get; set;}
+    public DbSet<PokeCollectionCard> PokeCollectionCards { get; set; }
 }
