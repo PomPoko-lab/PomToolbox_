@@ -26,6 +26,10 @@ public class PokemonCardRepository : IPokemonCardRepository {
         return await this._db.PokemonCards.FindAsync(id);
     }
 
+    public async Task<PokemonCard?> GetByApiId(string apiId) {
+        return await this._db.PokemonCards.FirstOrDefaultAsync(pc => pc.ApiId == apiId);
+    }
+
     public async Task<PokemonCard> Update(PokemonCard card) {
         this._db.PokemonCards.Update(card);
         await this._db.SaveChangesAsync();
