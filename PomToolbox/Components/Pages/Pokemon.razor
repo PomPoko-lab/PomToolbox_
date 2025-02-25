@@ -10,14 +10,16 @@
 @using PokemonTcgSdk.Standard.Features.FilterBuilder.Pokemon
 @using PokemonTcgSdk.Standard.Features.FilterBuilder.Trainer
 @using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Set
-@using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Cards
 @using PokemonCardApi = PokemonTcgSdk.Standard.Infrastructure.HttpClients.Cards.PokemonCard
 @using Blazored.LocalStorage;
 
-@inject IPokemonCollectionRepository PokemonCollectionRepository
-@inject IPokemonTcgApiService PokemonTcgApiService
 @inject IJSRuntime JSRuntime
 @inject ILocalStorageService LocalStorage
+@inject IPokemonTcgApiService PokemonTcgApiService
+
+@inject IPokeCollectionCardRepository PokeCollectionCardRepository
+@inject IPokemonCollectionRepository PokemonCollectionRepository
+@inject IPokemonCardRepository PokemonCardRepository
 
 <PageTitle>Pokemon</PageTitle>
 
@@ -229,11 +231,55 @@
     }
 
     private async Task SaveCollection() {
+        List<PokemonCard> cardsList = [];
+
+        // Convert the Api Cards to our type of PokemonCard
+        foreach (PokemonCardApi savedCard in userSavedCards) {
+            DateTime formattedTcgPlayerUpdated = DateTime.Now;
+            if (savedCard.Tcgplayer?.UpdatedAt != null) {
+                formattedTcgPlayerUpdated = DateTime.ParseExact(
+                    savedCard.Tcgplayer.UpdatedAt.ToString(), 
+                    "yyyy/MM/dd",
+                    System.Globalization.CultureInfo.InvariantCulture);
+            }
+            PokemonCard card = new PokemonCard {
+                ApiId = savedCard.Id,
+                Name = savedCard.Name.ToString(),
+                Set = savedCard.Set.Name.ToString(),
+                Series = savedCard.Set.Series.ToString(),
+                AverageTcgPlayerPrice = savedCard.Tcgplayer?.Prices?.Holofoil?.Market,
+                TcgPlayerPriceLastUpdated = formattedTcgPlayerUpdated,
+            };
+
+            cardsList.Add(card);
+        }
+
+        List<PokemonCard> databaseCards = [];
+        // Add any cards that don't already exist
+        foreach (PokemonCard card in cardsList) {
+            PokemonCard? existingCard = await PokemonCardRepository.GetByApiId(card.ApiId);
+
+            if (existingCard == null) {
+                existingCard = await PokemonCardRepository.Create(card);
+            }
+
+            databaseCards.Add(existingCard);
+        }
+
         PokemonCollection collection = new PokemonCollection {
             Name = "My Collection",
         };
-        await PokemonCollectionRepository.Create(collection);
-        PokemonCollection? fetchedCollection = await PokemonCollectionRepository.Get(collection.Id);
+        PokemonCollection createdCollection = await PokemonCollectionRepository.Create(collection);
+
+        foreach (PokemonCard card in databaseCards) {
+            PokeCollectionCard collectionCard = new PokeCollectionCard {
+                PokemonCardId = card.Id,
+                PokemonCollectionId = createdCollection.Id,
+            };
+            await PokeCollectionCardRepository.Create(collectionCard);
+        }
+
+        PokemonCollection? fetchedCollection = await PokemonCollectionRepository.Get(createdCollection.Id);
         Console.WriteLine(fetchedCollection?.Name);
     }
 }
