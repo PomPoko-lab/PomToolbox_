@@ -1,14 +1,14 @@
-namespace PomToolbox.Services;
+namespace PomToolbox.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using PomToolbox.Data.Models;
 using PomToolbox.Services.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public class PokemonCollectionService : IDatabaseService<PokemonCollection> {
+public class PokemonCollectionRepository : IPokemonCollectionRepository{
     private readonly ApplicationDbContext _db;
 
-    public PokemonCollectionService(ApplicationDbContext db) {
+    public PokemonCollectionRepository(ApplicationDbContext db) {
         this._db = db;
     }
 

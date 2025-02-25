@@ -11,9 +11,10 @@
 @using PokemonTcgSdk.Standard.Features.FilterBuilder.Trainer
 @using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Set
 @using PokemonTcgSdk.Standard.Infrastructure.HttpClients.Cards
+@using PokemonCardApi = PokemonTcgSdk.Standard.Infrastructure.HttpClients.Cards.PokemonCard
 @using Blazored.LocalStorage;
 
-@inject PokemonCollectionService PokemonCollectionService
+@inject IPokemonCollectionRepository PokemonCollectionRepository
 @inject IPokemonTcgApiService PokemonTcgApiService
 @inject IJSRuntime JSRuntime
 @inject ILocalStorageService LocalStorage
@@ -96,7 +97,7 @@
 @if (matchedPokemonCards.Count > 0) {
     <div class="w-full bg-base-200 mb-auto grow py-4">
         <div class="w-full md:w-3xl xl:w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6 justify-items-center">
-        @foreach (PokemonCard card in matchedPokemonCards) {
+        @foreach (PokemonCardApi card in matchedPokemonCards) {
             <div class="card bg-base-100 shadow-sm border-primary transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
                 <figure>
                     <img class="p-3" src="@card?.Images?.Small?.ToString()"/>
@@ -130,7 +131,7 @@
 @code {
     private bool searchingInProgress = false;
     private Toaster? toaster;
-    private List<PokemonCard> matchedPokemonCards = [];
+    private List<PokemonCardApi> matchedPokemonCards = [];
     private string searchValue = "";
     private List<string> setSeries = [
         "Scarlet & Violet",
@@ -140,14 +141,14 @@
     ];
     private string searchSeries = "";
 
-    private List<PokemonCard> userSavedCards = [];
+    private List<PokemonCardApi> userSavedCards = [];
     private double userSavedCardsTotal = 0.00;
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         bool triggerStateChanged = false;
         if (firstRender) {
             if (await LocalStorage.ContainKeyAsync("savedCards")) {
-                List<PokemonCard>? localStorageSavedCards = await LocalStorage.GetItemAsync<List<PokemonCard>>("savedCards");
+                List<PokemonCardApi>? localStorageSavedCards = await LocalStorage.GetItemAsync<List<PokemonCardApi>>("savedCards");
                 if (localStorageSavedCards != null) {
                     userSavedCards = localStorageSavedCards;
                     triggerStateChanged = true;
@@ -168,7 +169,7 @@
         }
     }
 
-    private void AddCard(PokemonCard card) {
+    private void AddCard(PokemonCardApi card) {
         userSavedCards.Add(card);
 
         double cardMarketPrice = card.Tcgplayer?.Prices?.Holofoil?.Market ?? 0.00;
@@ -182,7 +183,7 @@
     }
 
     private void RemoveCard(int cardIndex) {
-        PokemonCard card = userSavedCards.ElementAt(cardIndex);
+        PokemonCardApi card = userSavedCards.ElementAt(cardIndex);
         userSavedCardsTotal = userSavedCardsTotal - (card.Tcgplayer?.Prices?.Holofoil?.Market ?? 0.00);
 
         userSavedCards.RemoveAt(cardIndex);
@@ -204,7 +205,7 @@
             return;
         }
         searchingInProgress = true;
-        List<PokemonCard> searchedCardResults = await SearchPokemons();
+        List<PokemonCardApi> searchedCardResults = await SearchPokemons();
 
         if (searchedCardResults.Count == 0) {
             toaster?.AddToast(Toast.ToastType.Warning, "No cards were found");
@@ -214,7 +215,7 @@
         searchingInProgress = false;
     }
 
-    private async Task<List<PokemonCard>> SearchPokemons() {
+    private async Task<List<PokemonCardApi>> SearchPokemons() {
         string formattedSearchValue = searchValue.ToLower().Trim();
         PokemonFilterCollection<string, string> pokemonCardsFilter = PokemonFilterBuilder.CreatePokemonFilter();
         pokemonCardsFilter.AddName(searchValue.ToLower() + "*");
@@ -230,8 +231,8 @@
         PokemonCollection collection = new PokemonCollection {
             Name = "My Collection",
         };
-        await PokemonCollectionService.Create(collection);
-        PokemonCollection? fetchedCollection = await PokemonCollectionService.Get(collection.Id);
+        await PokemonCollectionRepository.Create(collection);
+        PokemonCollection? fetchedCollection = await PokemonCollectionRepository.Get(collection.Id);
         Console.WriteLine(fetchedCollection?.Name);
     }
 }
