@@ -28,11 +28,9 @@ public class PokemonCard
     [Precision(14, 2)]
     public double? AverageTcgPlayerPrice { get; set;} = 0.00;
 
-    [Required]
     public DateTime TcgPlayerPriceLastUpdated { get; set; } = DateTime.Now;
 
     public virtual ICollection<PokeCollectionCard>? PokeCollectionCards { get; set; } = [];
 
-    [Required]
     public DateTime DateCreated { get; set; } = DateTime.Now;
 }
