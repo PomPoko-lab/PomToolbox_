@@ -37,7 +37,7 @@ namespace PomToolbox.Migrations
 
                     b.HasIndex("PokemonCollectionId");
 
-                    b.ToTable("PokeCollectionCards");
+                    b.ToTable("PokeCollectionCards", (string)null);
                 });
 
             modelBuilder.Entity("PomToolbox.Data.Models.PokemonCard", b =>
@@ -78,7 +78,7 @@ namespace PomToolbox.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PokemonCards");
+                    b.ToTable("PokemonCards", (string)null);
                 });
 
             modelBuilder.Entity("PomToolbox.Data.Models.PokemonCollection", b =>
@@ -97,7 +97,7 @@ namespace PomToolbox.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PokemonCollections");
+                    b.ToTable("PokemonCollections", (string)null);
                 });
 
             modelBuilder.Entity("PomToolbox.Data.Models.PokeCollectionCard", b =>
