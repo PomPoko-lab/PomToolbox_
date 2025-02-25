@@ -5,4 +5,5 @@ public class ApplicationDbContext : DbContext {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
 
     public DbSet<PokemonCollection> PokemonCollections { get; set; }
+    public DbSet<PokemonCard> PokemonCards { get; set;}
 }
