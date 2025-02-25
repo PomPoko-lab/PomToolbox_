@@ -5,7 +5,7 @@ using PomToolbox.Services.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public class PokemonCollectionRepository : IPokemonCollectionRepository{
+public class PokemonCollectionRepository : IPokemonCollectionRepository {
     private readonly ApplicationDbContext _db;
 
     public PokemonCollectionRepository(ApplicationDbContext db) {
