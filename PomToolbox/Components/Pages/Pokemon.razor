@@ -35,9 +35,10 @@
 
 <dialog id="collection_modal" class="modal">
   <div class="modal-box bg-base-200">
-    <div class="flex justify-between">
-        <h3 class="text-lg mb-4">Your Collection</h3>
-        <h5 class="font-bold">Total: <span>$@userSavedCardsTotal.ToString("0.00")</span></h5>
+    <div class="flex items-center gap-4 mb-4">
+        <h3 class="text-lg">Your Collection</h3>
+        <h5 class="font-bold ml-auto">Total: <span>$@userSavedCardsTotal.ToString("0.00")</span></h5>
+        <button class="btn btn-primary btn-outline" @onclick="SaveCollection">Save Collection</button>
     </div>
     @if (userSavedCards.Count == 0) {
         <p>No items added to collection</p>
@@ -227,7 +228,7 @@
         return await PokemonTcgApiService.GetPokemonCards(pokemonCardsFilter); 
     }
 
-    private async Task AddCollection() {
+    private async Task SaveCollection() {
         PokemonCollection collection = new PokemonCollection {
             Name = "My Collection",
         };
