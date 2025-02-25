@@ -33,6 +33,10 @@ namespace PomToolbox.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PokemonCardId");
+
+                    b.HasIndex("PokemonCollectionId");
+
                     b.ToTable("PokeCollectionCards");
                 });
 
@@ -94,6 +98,35 @@ namespace PomToolbox.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PokemonCollections");
+                });
+
+            modelBuilder.Entity("PomToolbox.Data.Models.PokeCollectionCard", b =>
+                {
+                    b.HasOne("PomToolbox.Data.Models.PokemonCard", "PokemonCard")
+                        .WithMany("PokeCollectionCards")
+                        .HasForeignKey("PokemonCardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PomToolbox.Data.Models.PokemonCollection", "PokemonCollection")
+                        .WithMany("PokeCollectionCards")
+                        .HasForeignKey("PokemonCollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PokemonCard");
+
+                    b.Navigation("PokemonCollection");
+                });
+
+            modelBuilder.Entity("PomToolbox.Data.Models.PokemonCard", b =>
+                {
+                    b.Navigation("PokeCollectionCards");
+                });
+
+            modelBuilder.Entity("PomToolbox.Data.Models.PokemonCollection", b =>
+                {
+                    b.Navigation("PokeCollectionCards");
                 });
 #pragma warning restore 612, 618
         }

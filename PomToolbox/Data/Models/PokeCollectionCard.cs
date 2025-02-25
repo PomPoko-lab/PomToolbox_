@@ -8,16 +8,18 @@ public class PokeCollectionCard
 {
     [Key]
     public int Id { get; set; }
-    // [ForeignKey("User")]
-    // public int UserId { get; set; }
 
     [Required]
-    [ForeignKey("PokemonCard")]
     public int PokemonCardId { get; set; }
 
+    [ForeignKey("PokemonCardId")]
+    public virtual PokemonCard? PokemonCard { get; set; }
+
     [Required]
-    [ForeignKey("PokemonCollection")]
     public int PokemonCollectionId { get; set; }
+
+    [ForeignKey("PokemonCollectionId")]
+    public virtual PokemonCollection? PokemonCollection { get; set; }
 
     [Required]
     public DateTime DateCreated { get; set; } = DateTime.Now;

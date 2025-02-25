@@ -31,6 +31,8 @@ public class PokemonCard
     [Required]
     public DateTime TcgPlayerPriceLastUpdated { get; set; } = DateTime.Now;
 
+    public virtual ICollection<PokeCollectionCard>? PokeCollectionCards { get; set; } = [];
+
     [Required]
     public DateTime DateCreated { get; set; } = DateTime.Now;
 }

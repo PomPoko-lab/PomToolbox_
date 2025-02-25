@@ -13,5 +13,7 @@ public class PokemonCollection
     [MaxLength(50)]
     public string Name { get; set; } = string.Empty;
 
+    public virtual ICollection<PokeCollectionCard>? PokeCollectionCards { get; set; } = [];
+
     public DateTime DateCreated { get; set; } = DateTime.Now;
 }

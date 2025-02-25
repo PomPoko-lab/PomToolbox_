@@ -24,7 +24,29 @@ namespace PomToolbox.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PokeCollectionCards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PokeCollectionCards_PokemonCards_PokemonCardId",
+                        column: x => x.PokemonCardId,
+                        principalTable: "PokemonCards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PokeCollectionCards_PokemonCollections_PokemonCollectionId",
+                        column: x => x.PokemonCollectionId,
+                        principalTable: "PokemonCollections",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PokeCollectionCards_PokemonCardId",
+                table: "PokeCollectionCards",
+                column: "PokemonCardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PokeCollectionCards_PokemonCollectionId",
+                table: "PokeCollectionCards",
+                column: "PokemonCollectionId");
         }
 
         /// <inheritdoc />
