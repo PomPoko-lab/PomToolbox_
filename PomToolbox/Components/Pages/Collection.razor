@@ -13,9 +13,8 @@
 
 <Toaster @ref="toaster"/>
 
-@foreach (PokeCollectionCard card in collection?.PokeCollectionCards ?? []) {
-    <p>test</p>
-    <p>@card.PokemonCard.Name</p>
+@foreach (PokeCollectionCard association in collection?.PokeCollectionCards ?? []) {
+    <p>@association.PokemonCard?.Name</p>
 }
 
 @code{
@@ -42,7 +41,5 @@
                 NavigationManager.NavigateTo("/Pokemon");
             }
         }
-        Console.WriteLine($"Collection: {collection?.Name}");
-        Console.WriteLine($"Collection Cards: {collection?.PokeCollectionCards?.Count() ?? 0}");
     }
 }
