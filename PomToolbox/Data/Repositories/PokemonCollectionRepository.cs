@@ -26,6 +26,10 @@ public class PokemonCollectionRepository : IPokemonCollectionRepository {
         return await this._db.PokemonCollections.FindAsync(id);
     }
 
+    public async Task<PokemonCollection?> GetByUuid(string Uuid) {
+        return await this._db.PokemonCollections.FirstOrDefaultAsync(pc => pc.Uuid == Uuid);
+    }
+
     public async Task<PokemonCollection> Update(PokemonCollection collection) {
         this._db.PokemonCollections.Update(collection);
         await this._db.SaveChangesAsync();
