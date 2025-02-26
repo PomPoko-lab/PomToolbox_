@@ -15,7 +15,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .UseLazyLoadingProxies()
+    );
 
 builder.Services.AddScoped<IPokemonTcgApiService, PokemonTcgApiService>();
 builder.Services.AddScoped<IPokemonCollectionRepository, PokemonCollectionRepository>();
