@@ -9,6 +9,8 @@ public class PokemonCollection
     // [ForeignKey("User")]
     // public int UserId { get; set; }
 
+    public string Uuid { get; set; } = Guid.NewGuid().ToString();
+
     [Required]
     [MaxLength(50)]
     public string Name { get; set; } = string.Empty;
