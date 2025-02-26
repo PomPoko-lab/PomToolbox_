@@ -13,6 +13,7 @@
 @using PokemonCardApi = PokemonTcgSdk.Standard.Infrastructure.HttpClients.Cards.PokemonCard
 @using Blazored.LocalStorage;
 
+@inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 @inject ILocalStorageService LocalStorage
 @inject IPokemonTcgApiService PokemonTcgApiService
@@ -148,6 +149,7 @@
     private double userSavedCardsTotal = 0.00;
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
+        await base.OnAfterRenderAsync(firstRender);
         bool triggerStateChanged = false;
         if (firstRender) {
             if (await LocalStorage.ContainKeyAsync("savedCards")) {
@@ -279,7 +281,10 @@
             await PokeCollectionCardRepository.Create(collectionCard);
         }
 
-        PokemonCollection? fetchedCollection = await PokemonCollectionRepository.Get(createdCollection.Id);
-        Console.WriteLine(fetchedCollection?.Name);
+        LocalStorage.RemoveItemAsync("savedCards");
+        LocalStorage.RemoveItemAsync("savedCardsTotal");
+        toaster?.AddToast(Toast.ToastType.Success, "Collection saved. Redirecting...");
+        await Task.Delay(2500);
+        NavigationManager.NavigateTo($"/Collection/{createdCollection.Uuid}");
     }
 }

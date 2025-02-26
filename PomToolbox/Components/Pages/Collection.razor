@@ -1,0 +1,48 @@
+﻿@page "/collection/{collectionId}"
+@rendermode InteractiveServer
+
+@using PomToolbox.Components
+@using PomToolbox.UIModels;
+@using PomToolbox.Services.Interfaces
+@using PomToolbox.Data.Models;
+
+@inject NavigationManager NavigationManager
+@inject IPokemonCollectionRepository PokemonCollectionRepository
+
+<PageTitle>View Collection</PageTitle>
+
+<Toaster @ref="toaster"/>
+
+@foreach (PokeCollectionCard card in collection?.PokeCollectionCards ?? []) {
+    <p>test</p>
+    <p>@card.PokemonCard.Name</p>
+}
+
+@code{
+    [Parameter]
+    public string? collectionId { get; set; }
+    public PokemonCollection? collection { get; set; }
+    public List<PokemonCard> userCards = [];
+    private Toaster? toaster;
+
+    protected override async Task OnParametersSetAsync() {
+        await base.OnParametersSetAsync();
+
+        if (collectionId != null) {
+            collection = await PokemonCollectionRepository.GetByUuid(collectionId);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender) {
+            if (collection == null) {
+                toaster?.AddToast(Toast.ToastType.Warning, "Collection not found. Redirecting...");
+                await Task.Delay(2500);
+                NavigationManager.NavigateTo("/Pokemon");
+            }
+        }
+        Console.WriteLine($"Collection: {collection?.Name}");
+        Console.WriteLine($"Collection Cards: {collection?.PokeCollectionCards?.Count() ?? 0}");
+    }
+}
