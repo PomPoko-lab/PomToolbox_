@@ -1,18 +1,19 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-
 WORKDIR /var/www/app
-
 COPY . .
-
 RUN dotnet restore
-
 RUN dotnet tool install --global dotnet-ef
 
+# Add the tools directory to PATH in a way that persists
 ENV PATH="$PATH:/root/.dotnet/tools"
+
+# Another approach is to create a .bashrc file that sets the PATH
+RUN echo 'export PATH="$PATH:/root/.dotnet/tools"' >> /root/.bashrc
 
 WORKDIR /var/www/app/PomToolbox
 RUN dotnet ef database update
 RUN dotnet dev-certs https --format PEM --export-path ./certs/temp_cert.pem --no-password
 RUN apt-get update && apt install -y sqlite3
-
 EXPOSE 5089
+
+CMD ["bash"]
