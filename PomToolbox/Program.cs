@@ -6,6 +6,7 @@ using PomToolbox.Data.Repositories;
 using dotenv.net;
 using Blazored.LocalStorage;
 using Microsoft.EntityFrameworkCore;
+using Soenneker.Blazor.DataTables.Registrars;
 
 var builder = WebApplication.CreateBuilder(args);
 DotEnv.Load();
@@ -16,8 +17,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
-        .UseLazyLoadingProxies()
-    );
+        .UseLazyLoadingProxies());
 
 builder.Services.AddScoped<IPokemonTcgApiService, PokemonTcgApiService>();
 builder.Services.AddScoped<IPokemonCollectionRepository, PokemonCollectionRepository>();
@@ -25,6 +25,7 @@ builder.Services.AddScoped<IPokemonCardRepository, PokemonCardRepository>();
 builder.Services.AddScoped<IPokeCollectionCardRepository, PokeCollectionCardRepository>();
 
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddDataTablesInteropAsScoped();
 
 var app = builder.Build();
 

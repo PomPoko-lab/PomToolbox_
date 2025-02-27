@@ -5,6 +5,7 @@
 @using PomToolbox.UIModels;
 @using PomToolbox.Services.Interfaces
 @using PomToolbox.Data.Models;
+@using Soenneker.Blazor.DataTables.Options;
 
 @inject NavigationManager NavigationManager
 @inject IPokemonCollectionRepository PokemonCollectionRepository
@@ -13,8 +14,59 @@
 
 <Toaster @ref="toaster"/>
 
-@foreach (PokeCollectionCard association in collection?.PokeCollectionCards ?? []) {
-    <p>@association.PokemonCard?.Name</p>
+@if (collection == null) {
+    <p><em>Loading...</em></p>
+} else {
+    <div class="w-full bg-base-200 mb-auto grow py-4">
+        <div class="w-full md:w-3xl xl:w-7xl mx-auto">
+            
+            <DataTable class="table" Options="tableOptions">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Set</th>
+                        <th>TCG Avg</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (PokeCollectionCard association in collection?.PokeCollectionCards ?? []) {
+                        <tr class="hover">
+                            <td>
+                                <div class="tooltip tooltip-left">
+                                    <div class="tooltip-content">
+                                        <img class="shadow" src="@association.PokemonCard?.ImageUrlSmall.ToString()"/>
+                                    </div>
+                                    <img class="max-h-[100px] shadow-sm" src="@association.PokemonCard?.ImageUrlSmall.ToString()"/>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="tooltip tooltip-secondary mb-2" data-tip="Go to TCGPlayer">
+                                    <a href="@association.PokemonCard?.TcgPlayerUrl.ToString()" class="link" target="_blank">
+                                        @($"{association.PokemonCard?.Name.ToString()} - {association.PokemonCard?.Number.ToString()}")
+                                    </a>
+                                </span><br>
+                                <div class="badge badge-soft badge-secondary">
+                                    @association.PokemonCard?.Rarity.ToString()
+                                </div>
+                            </td>
+                            <td>@association.PokemonCard?.Set.ToString()</td>
+                            <td>
+                                <a class="link link-primary tooltip tooltip-secondary" href="javascript:void(0);">
+                                    <div class="tooltip-content">
+                                        <span>
+                                            Last Updated:<br> @association.PokemonCard?.TcgPlayerPriceLastUpdated.ToString("MM/dd/yyyy")
+                                        </span>
+                                    </div>
+                                    @(association.PokemonCard?.AverageTcgPlayerPrice != null ? $"${association.PokemonCard?.AverageTcgPlayerPrice}" : "N/A")
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </DataTable>
+        </div>
+    </div>
 }
 
 @code{
@@ -23,6 +75,7 @@
     public PokemonCollection? collection { get; set; }
     public List<PokemonCard> userCards = [];
     private Toaster? toaster;
+    private DataTableOptions? tableOptions;
 
     protected override async Task OnParametersSetAsync() {
         await base.OnParametersSetAsync();
@@ -40,6 +93,14 @@
                 await Task.Delay(2500);
                 NavigationManager.NavigateTo("/Pokemon");
             }
+
+            this.tableOptions = new DataTableOptions {
+                Searching = true,
+                LengthChange = false,
+                Info = false,
+                Paging = true,
+                Order = [new object[] {0, "asc"}]
+            };
         }
     }
 }
