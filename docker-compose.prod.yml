@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile.dotnet.prod
     volumes:
       - app-data:/var/www/app
+      - ./PomToolbox/app.db:/var/www/app/app.db
       - ./PomToolbox/.env:/var/www/app/.env
       - ./certs:/var/www/app/certs
     ports:

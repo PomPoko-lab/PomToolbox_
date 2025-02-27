@@ -17,7 +17,7 @@ COPY --from=nodebuild /var/www/app/PomToolbox/wwwroot /var/www/app/PomToolbox/ww
 RUN dotnet restore
 
 RUN dotnet tool install --global dotnet-ef
-RUN export PATH="$PATH:/root/.dotnet/tools"
+ENV PATH="$PATH:/root/.dotnet/tools"
 WORKDIR /var/www/app/PomToolbox
 RUN dotnet ef database update
 WORKDIR /var/www/app
