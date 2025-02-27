@@ -10,25 +10,31 @@ RUN npm run build
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /var/www/app
 COPY . .
-
 # Copy built Node assets from previous stage
 COPY --from=nodebuild /var/www/app/PomToolbox/wwwroot /var/www/app/PomToolbox/wwwroot
-
 RUN dotnet restore
-
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
 WORKDIR /var/www/app/PomToolbox
 RUN dotnet ef database update
-WORKDIR /var/www/app
 
+RUN mkdir -p /var/www/app/data
+RUN cp /var/www/app/PomToolbox/data/app.db /var/www/app/data/
+
+WORKDIR /var/www/app
 RUN dotnet publish -c Release -o out
 
 # Final Stage: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /var/www/app
+
+RUN mkdir -p /var/www/app/data
+
 COPY --from=build /var/www/app/out ./
+COPY --from=build /var/www/app/data/app.db /var/www/app/data/
+
+# Declare the data directory as a volume
+VOLUME /var/www/app/data
 
 ENV ASPNETCORE_ENVIRONMENT=Production
-
 ENTRYPOINT ["dotnet", "PomToolbox.dll"]
