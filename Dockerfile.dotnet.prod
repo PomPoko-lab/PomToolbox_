@@ -18,6 +18,7 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 WORKDIR /var/www/app/PomToolbox
 RUN dotnet ef database update
 
+RUN mkdir -p /var/www/app/Data
 RUN cp /var/www/app/PomToolbox/Data/app.db /var/www/app/Data/
 
 WORKDIR /var/www/app
