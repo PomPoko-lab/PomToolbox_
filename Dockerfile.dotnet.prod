@@ -18,8 +18,7 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 WORKDIR /var/www/app/PomToolbox
 RUN dotnet ef database update
 
-RUN mkdir -p /var/www/app/data
-RUN cp /var/www/app/PomToolbox/data/app.db /var/www/app/data/
+RUN cp /var/www/app/PomToolbox/Data/app.db /var/www/app/Data/
 
 WORKDIR /var/www/app
 RUN dotnet publish -c Release -o out
@@ -31,10 +30,10 @@ WORKDIR /var/www/app
 RUN mkdir -p /var/www/app/data
 
 COPY --from=build /var/www/app/out ./
-COPY --from=build /var/www/app/data/app.db /var/www/app/data/
+COPY --from=build /var/www/app/Data/app.db /var/www/app/Data/
 
-# Declare the data directory as a volume
-VOLUME /var/www/app/data
+# Declare the Data directory as a volume
+VOLUME /var/www/app/Data
 
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENTRYPOINT ["dotnet", "PomToolbox.dll"]
