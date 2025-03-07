@@ -35,11 +35,10 @@ public class PokemonCardRepository : IPokemonCardRepository {
 
         if (trackedCard != null) {
             this._db.Entry(trackedCard).State = EntityState.Detached;
+            this._db.Entry(card).State = EntityState.Modified;
+        } else {
+            this._db.PokemonCards.Update(card);
         }
-
-        this._db.Entry(card).State = EntityState.Modified;
-        // Same as above
-        // this._db.PokemonCards.Update(card);
         await this._db.SaveChangesAsync();
         return card;
     }
