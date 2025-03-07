@@ -6,7 +6,6 @@ services:
       context: .
       dockerfile: Dockerfile.dotnet.prod
     volumes:
-      - app-data:/var/www/app
       - ./PomToolbox/.env:/var/www/app/.env
       - ./certs:/var/www/app/certs
     ports:
@@ -15,6 +14,3 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     restart: unless-stopped
-
-volumes:
-  app-data:
