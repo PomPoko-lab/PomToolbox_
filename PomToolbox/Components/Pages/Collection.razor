@@ -137,14 +137,14 @@
         await base.OnParametersSetAsync();
 
         if (collectionId != null) {
-            @* PokemonCollection? initialCollection = await PokemonCollectionRepository.GetByUuid(collectionId);
+            PokemonCollection? initialCollection = await PokemonCollectionRepository.GetByUuid(collectionId);
             if (initialCollection == null) {
                 toaster?.AddToast(Toast.ToastType.Warning, "Collection not found. Redirecting...");
                 await Task.Delay(2500);
                 NavigationManager.NavigateTo("/pokemon");
                 return;
             }
-            await PokemonCollectionService.GetUpdatedCollectionCards(initialCollection); *@
+            await PokemonCollectionService.GetUpdatedCollectionCards(initialCollection);
             // Get the updated collection
             collection = await PokemonCollectionRepository.GetByUuid(collectionId);
         }

@@ -31,9 +31,30 @@ public class PokemonCardRepository : IPokemonCardRepository {
     }
 
     public async Task<PokemonCard> Update(PokemonCard card) {
-        this._db.PokemonCards.Update(card);
+        PokemonCard? trackedCard = this._db.PokemonCards.Local.FirstOrDefault(pc => pc.Id == card.Id);
+
+        if (trackedCard != null) {
+            this._db.Entry(trackedCard).State = EntityState.Detached;
+        }
+
+        this._db.Entry(card).State = EntityState.Modified;
+        // Same as above
+        // this._db.PokemonCards.Update(card);
         await this._db.SaveChangesAsync();
         return card;
+    }
+
+    public async Task<PokemonCard> UpdateByMatchingApiId(PokemonCard card) {
+        PokemonCard? existingCard = await this._db.PokemonCards
+            .AsNoTracking()
+            .FirstOrDefaultAsync(pc => pc.ApiId == card.ApiId);
+
+        if (existingCard == null) {
+            return await this.Create(card);
+        } else {
+            card.Id = existingCard.Id;
+            return await this.Update(card);
+        }
     }
 
     public async Task Delete(PokemonCard card) {
