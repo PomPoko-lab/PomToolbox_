@@ -133,9 +133,7 @@
         }
     }
 
-    protected override async Task OnParametersSetAsync() {
-        await base.OnParametersSetAsync();
-
+    protected override async Task OnInitializedAsync() {
         if (collectionId != null) {
             PokemonCollection? initialCollection = await PokemonCollectionRepository.GetByUuid(collectionId);
             if (initialCollection == null) {
@@ -148,17 +146,12 @@
             // Get the updated collection
             collection = await PokemonCollectionRepository.GetByUuid(collectionId);
         }
+        await base.OnInitializedAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender) {
-            if (collection == null) {
-                toaster?.AddToast(Toast.ToastType.Warning, "Collection not found. Redirecting...");
-                await Task.Delay(2500);
-                NavigationManager.NavigateTo("/pokemon");
-            }
-
             this.tableOptions = new DataTableOptions {
                 Searching = true,
                 LengthChange = false,
