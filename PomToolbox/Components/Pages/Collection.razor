@@ -9,6 +9,7 @@
 
 @inject NavigationManager NavigationManager
 @inject IPokemonCollectionRepository PokemonCollectionRepository
+@inject IPokemonCollectionService PokemonCollectionService
 
 <PageTitle>View Collection</PageTitle>
 
@@ -41,7 +42,7 @@
                             <div class="tooltip tooltip-primary font-normal" data-tip="Offsets the total cost by a percentage">
                                 <i class="fa-solid fa-circle-info"></i>
                             </div>
-                            </legend>
+                        </legend>
                         <label class="input">
                             <input type="number" step="0.01" @bind-value="totalOffsetPercentage" @bind-value:event="oninput" placeholder="100.00" />%
                         </label>
@@ -136,6 +137,15 @@
         await base.OnParametersSetAsync();
 
         if (collectionId != null) {
+            @* PokemonCollection? initialCollection = await PokemonCollectionRepository.GetByUuid(collectionId);
+            if (initialCollection == null) {
+                toaster?.AddToast(Toast.ToastType.Warning, "Collection not found. Redirecting...");
+                await Task.Delay(2500);
+                NavigationManager.NavigateTo("/pokemon");
+                return;
+            }
+            await PokemonCollectionService.GetUpdatedCollectionCards(initialCollection); *@
+            // Get the updated collection
             collection = await PokemonCollectionRepository.GetByUuid(collectionId);
         }
     }
@@ -146,7 +156,7 @@
             if (collection == null) {
                 toaster?.AddToast(Toast.ToastType.Warning, "Collection not found. Redirecting...");
                 await Task.Delay(2500);
-                NavigationManager.NavigateTo("/Pokemon");
+                NavigationManager.NavigateTo("/pokemon");
             }
 
             this.tableOptions = new DataTableOptions {

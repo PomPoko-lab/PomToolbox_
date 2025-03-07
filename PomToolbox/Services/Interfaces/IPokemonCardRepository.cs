@@ -9,5 +9,6 @@ public interface IPokemonCardRepository {
     public Task<PokemonCard?> Get(int id);
     public Task<PokemonCard?> GetByApiId(string apiId);
     public Task<PokemonCard> Update(PokemonCard card);
+    public Task<PokemonCard> UpdateByMatchingApiId(PokemonCard card);
     public Task Delete(PokemonCard card);
 }

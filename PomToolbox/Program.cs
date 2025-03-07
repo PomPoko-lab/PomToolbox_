@@ -7,6 +7,7 @@ using dotenv.net;
 using Blazored.LocalStorage;
 using Microsoft.EntityFrameworkCore;
 using Soenneker.Blazor.DataTables.Registrars;
+using PomToolbox.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 DotEnv.Load();
@@ -23,6 +24,8 @@ builder.Services.AddScoped<IPokemonTcgApiService, PokemonTcgApiService>();
 builder.Services.AddScoped<IPokemonCollectionRepository, PokemonCollectionRepository>();
 builder.Services.AddScoped<IPokemonCardRepository, PokemonCardRepository>();
 builder.Services.AddScoped<IPokeCollectionCardRepository, PokeCollectionCardRepository>();
+builder.Services.AddScoped<IPokemonCollectionService, PokemonCollectionService>();
+builder.Services.AddScoped<IPokemonCardService, PokemonCardService>();
 
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddDataTablesInteropAsScoped();

@@ -21,6 +21,7 @@
 @inject IPokeCollectionCardRepository PokeCollectionCardRepository
 @inject IPokemonCollectionRepository PokemonCollectionRepository
 @inject IPokemonCardRepository PokemonCardRepository
+@inject IPokemonCardService PokemonCardService
 
 <PageTitle>Pokemon</PageTitle>
 
@@ -237,27 +238,7 @@
 
         // Convert the Api Cards to our type of PokemonCard
         foreach (PokemonCardApi savedCard in userSavedCards) {
-            DateTime formattedTcgPlayerUpdated = DateTime.Now;
-            if (savedCard.Tcgplayer?.UpdatedAt != null) {
-                formattedTcgPlayerUpdated = DateTime.ParseExact(
-                    savedCard.Tcgplayer.UpdatedAt.ToString(), 
-                    "yyyy/MM/dd",
-                    System.Globalization.CultureInfo.InvariantCulture);
-            }
-            PokemonCard card = new PokemonCard {
-                ApiId = savedCard.Id,
-                Name = savedCard.Name.ToString(),
-                Number = savedCard.Number.ToString(),
-                Set = savedCard.Set.Name.ToString(),
-                Series = savedCard.Set.Series.ToString(),
-                Rarity = savedCard.Rarity.ToString(),
-                AverageTcgPlayerPrice = savedCard.Tcgplayer?.Prices?.Holofoil?.Market,
-                TcgPlayerPriceLastUpdated = formattedTcgPlayerUpdated,
-                TcgPlayerUrl = savedCard.Tcgplayer?.Url.ToString() ?? string.Empty,
-                ImageUrlLarge = savedCard.Images.Large.ToString(),
-                ImageUrlSmall = savedCard.Images.Small.ToString(),
-            };
-
+            PokemonCard card = PokemonCardService.ConvertApiCardToPokemonCard(savedCard);
             cardsList.Add(card);
         }
 
